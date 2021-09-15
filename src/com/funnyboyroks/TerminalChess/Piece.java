@@ -7,6 +7,8 @@ public class Piece {
     private final Type type;
     private final boolean white;
 
+    public int timesMoved = 0;
+
     public Piece(Type type, boolean white) {
 
         this.type = type;

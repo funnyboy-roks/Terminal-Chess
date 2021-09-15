@@ -1,8 +1,14 @@
 package com.funnyboyroks.TerminalChess;
 
-import java.util.Arrays;
-
 public class Util {
+
+    public static char[] mirrorArr(char[] arr) {
+        char[] out = arr.clone();
+        for (int i = 0; i < arr.length; i++) {
+            out[out.length - 1-i] = arr[i];
+        }
+        return out;
+    }
 
     public static Piece[][] rotateMat(Piece[][] arr) {
         Piece[][] out = new Piece[8][8]; // hard coded bc I'm lazy

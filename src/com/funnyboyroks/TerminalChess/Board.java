@@ -1,20 +1,15 @@
 package com.funnyboyroks.TerminalChess;
 
-import java.util.Arrays;
-
 public class Board {
-
-    private Piece[][] board = new Piece[8][8];
 
     public static final char[] ROW_MARKS = "¹²³⁴⁵⁶⁷⁸".toCharArray();
     public static final char[] FILE_MARKS = "ᵃᵇᶜᵈᵉᶠᵍʰ".toCharArray();
-
-    private boolean whiteDown = true;
-
     public static final Color[] BACKGROUND = new Color[]{
         Color.GREEN_BACKGROUND,
         Color.BLUE_BACKGROUND,
         };
+    private final Piece[][] board = new Piece[8][8];
+    private boolean whiteDown = true;
 
     public Board() {
         for (int y = 0; y < board.length; y++) {
@@ -43,15 +38,39 @@ public class Board {
         Piece[][] rot = whiteDown ? Util.rotateMat(board) : Util.cloneMat(board);
         for (int y = 0; y < rot.length; y++) {
             Piece[] row = rot[y];
-            sb.append(ROW_MARKS[y]);
+            sb
+                .append(
+                    (whiteDown ?
+                        Util.mirrorArr(ROW_MARKS) :
+                        ROW_MARKS)
+                        [y]
+                );
             for (int x = 0; x < row.length; x++) {
                 Piece p = row[x];
                 Color shadedColor = BACKGROUND[x % 2 == 0 != (y % 2 == 0) ? 1 : 0];
-                sb.append(shadedColor).append(' ').append(p == null ? "-" : p.toString(shadedColor)).append(' ');
+                sb
+                    .append(shadedColor)
+                    .append(' ')
+                    .append(
+                        p == null ?
+                            "-" :
+                            p.toString(shadedColor)
+                    ).append(' ');
             }
             sb.append(Color.RESET).append('\n');
         }
-        sb.append("  ").append(String.join("  ", Util.charArrToString(FILE_MARKS)));
+        sb
+            .append("  ")
+            .append(
+                String.join(
+                    "  ",
+                    Util.charArrToString(
+                        whiteDown ?
+                            FILE_MARKS :
+                            Util.mirrorArr(FILE_MARKS)
+                    )
+                )
+            );
         return sb.toString() + Color.RESET;
     }
 
@@ -65,5 +84,13 @@ public class Board {
 
     public void setWhiteDown(boolean whiteDown) {
         this.whiteDown = whiteDown;
+    }
+
+    public Piece getPiece(Space space) {
+        return board[space.y][space.x];
+    }
+
+    public void setPiece(Space space, Piece p) {
+        board[space.y][space.x] = p;
     }
 }

@@ -1,5 +1,7 @@
 package com.funnyboyroks.TerminalChess;
 
+import java.util.Objects;
+
 public class Space {
 
     public int x, y;
@@ -25,5 +27,18 @@ public class Space {
     @Override
     public String toString() {
         return toChar(x) + "" + y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Space space = (Space) o;
+        return x == space.x && y == space.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

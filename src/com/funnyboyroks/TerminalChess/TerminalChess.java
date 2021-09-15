@@ -11,10 +11,10 @@ public class TerminalChess {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        System.out.println(Color.YELLOW + "Commands: ");
-        System.out.println("-m => Show the previous moves");
-        System.out.println("-f => Flip the board");
-        System.out.println("-b => Show the board" + Color.RESET);
+        info("Commands: ");
+        info("-m => Show the previous moves");
+        info("-f => Flip the board");
+        info("-b => Show the board");
 
         board.print();
 
@@ -26,7 +26,7 @@ public class TerminalChess {
             switch (line.toLowerCase()) {
                 case "-f" -> {
                     board.flip();
-                    System.out.println(Color.YELLOW + "Board flipped" + Color.RESET);
+                    info("Board flipped.");
                     board.print();
                 }
                 case "-b" -> board.print();
@@ -40,17 +40,25 @@ public class TerminalChess {
                     }
                     System.out.println(sb);
                 }
+                case "-h" -> {
+                    // Highlight the possible moves
+                    // '-' for empty spot
+                    // 'x' for spot with enemy
+                }
                 default -> {
-                    if (isValidMove(line)) {
-                        String[] parts = line.split(" ");
-                        Space from = new Space(parts[0]);
-                        Space to = new Space(parts[1]);
-                        moves.add(from + "" + to);
-                        System.out.println(Color.GREEN + "" + from + " -> " + to + Color.RESET);
-                    } else {
-                        System.out.println(Color.RED + "Invalid move, format: 'from to'" + Color.RESET);
+                    if (!isValidMove(line)) {
+                        error("Invalid Format.  Format: 'from to'");
+                        break;
                     }
+                    String[] parts = line.split(" ");
+                    Space from = new Space(parts[0]);
+                    Space to = new Space(parts[1]);
+                    moves.add(from + "" + to);
+                    moved = move(from, to);
+                    if (moved) {
 
+                        success("%s -> %s", from, to);
+                    }
 
                 }
             }
@@ -83,11 +91,35 @@ public class TerminalChess {
         return true;
     }
 
+    public static boolean move(Space from, Space to) {
+        if (from.equals(to)) {
+            error("Invalid Move");
+            return false;
+        }
+
+        Piece fromPiece = board.getPiece(from);
+        Piece toPiece = board.getPiece(to);
+
+        return true;
+    }
+
     public static boolean contains(int[] arr, int v) {
         for (int i : arr) {
             if (i == v) return true;
         }
         return false;
+    }
+
+    public static void error(String str, Object... subs) {
+        System.out.printf(Color.RED + str + Color.RESET + "\n", subs);
+    }
+
+    public static void success(String str, Object... subs) {
+        System.out.printf(Color.GREEN + str + Color.RESET + "\n", subs);
+    }
+
+    public static void info(String str, Object... subs) {
+        System.out.printf(Color.YELLOW + str + Color.RESET + "\n", subs);
     }
 
 }
